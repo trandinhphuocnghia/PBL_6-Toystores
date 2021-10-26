@@ -53,6 +53,7 @@ const  UserController = {
        try{
         // check if rf token was send in cookie died.   
         const rf_token = req.cookies.refreshtoken;
+        console.log(rf_token)
         if(!rf_token) return res.status(400).json({msg: "Please Login again, or you weren't Register!!!"})
 
         //if have rf_token.
@@ -72,8 +73,9 @@ const  UserController = {
     login: async (req,res) => {
         try {
             const {email, password} = req.body;
-
+           
             const user = await Users.findOne({email})
+        
             if(!user) return res.status(400).json({msg: "User does not exist."})
 
             const isMatch = await bcrypt.compare(password, user.password)
@@ -110,9 +112,10 @@ const  UserController = {
     getCustomerinfo: async (req,res) => {
         try{
             const user = await Users.findById(req.user.id).select('-password')
+            //console.log(user)
             if(!user) return res.status(400).json({msg: "User does not exist."})
 
-            res.json(user)
+           res.json(user)
         }catch(err){
             return res.status(500).json({msg: err.message})
         }
